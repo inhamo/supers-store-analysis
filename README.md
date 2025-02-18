@@ -24,4 +24,5 @@ This project aims to analyze **sales revenue growth** by identifying whether the
 ## 🏗️ How to Use
 1. **Clone the repository**
    ```sh
-   git clone https://github.com/inhamo/revenue-growth-analysis.git
+   git clone https://github.com/inhamo/supers-store-analysis.git
+   
