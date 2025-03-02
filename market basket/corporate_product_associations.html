@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "blue", "id": "Bevis Round Conference Table Top \u0026 Single Column Base", "label": "Bevis Round Conference Table Top \u0026 Single Column Base", "shape": "dot"}, {"color": "red", "id": "Round Specialty Laser Printer Labels", "label": "Round Specialty Laser Printer Labels", "shape": "dot"}, {"color": "blue", "id": "Nu-Dell Executive Frame", "label": "Nu-Dell Executive Frame", "shape": "dot"}, {"color": "red", "id": "Okidata ML184 Turbo Dot Matrix Printers", "label": "Okidata ML184 Turbo Dot Matrix Printers", "shape": "dot"}, {"color": "blue", "id": "Angle-D Binders with Locking Rings, Label Holders", "label": "Angle-D Binders with Locking Rings, Label Holders", "shape": "dot"}, {"color": "red", "id": "SAFCO Mobile Desk Side File, Wire Frame", "label": "SAFCO Mobile Desk Side File, Wire Frame", "shape": "dot"}, {"color": "blue", "id": "T61", "label": "T61", "shape": "dot"}, {"color": "red", "id": "Acco Clips to Go\u2122 Binder Clips, 24 Clips in Two Sizes", "label": "Acco Clips to Go\u2122 Binder Clips, 24 Clips in Two Sizes", "shape": "dot"}, {"color": "blue", "id": "Avery 48", "label": "Avery 48", "shape": "dot"}, {"color": "red", "id": "Wilson Jones Standard D-Ring Binders", "label": "Wilson Jones Standard D-Ring Binders", "shape": "dot"}, {"color": "blue", "id": "Xerox 1928", "label": "Xerox 1928", "shape": "dot"}, {"color": "red", "id": "6190", "label": "6190", "shape": "dot"}, {"color": "blue", "id": "5170", "label": "5170", "shape": "dot"}, {"color": "red", "id": "Barrel Sharpener", "label": "Barrel Sharpener", "shape": "dot"}, {"color": "blue", "id": "Xerox 1948", "label": "Xerox 1948", "shape": "dot"}, {"color": "red", "id": "Acco D-Ring Binder w/DublLock\u00ae", "label": "Acco D-Ring Binder w/DublLock\u00ae", "shape": "dot"}, {"color": "blue", "id": "Microsoft Natural Multimedia Keyboard", "label": "Microsoft Natural Multimedia Keyboard", "shape": "dot"}, {"color": "blue", "id": "Recycled Steel Personal File for Standard File Folders", "label": "Recycled Steel Personal File for Standard File Folders", "shape": "dot"}, {"color": "red", "id": "Eldon Advantage\u00ae Foldable Chair Mats for Low Pile Carpets", "label": "Eldon Advantage\u00ae Foldable Chair Mats for Low Pile Carpets", "shape": "dot"}, {"color": "blue", "id": "MicroTAC 650", "label": "MicroTAC 650", "shape": "dot"}, {"color": "red", "id": "Xerox 1953", "label": "Xerox 1953", "shape": "dot"}, {"color": "blue", "id": "6162", "label": "6162", "shape": "dot"}, {"color": "red", "id": "Security-Tint Envelopes", "label": "Security-Tint Envelopes", "shape": "dot"}, {"color": "blue", "id": "Situations Contoured Folding Chairs, 4/Set", "label": "Situations Contoured Folding Chairs, 4/Set", "shape": "dot"}, {"color": "red", "id": "Avery Hi-Liter Comfort Grip Fluorescent Highlighter, Yellow Ink", "label": "Avery Hi-Liter Comfort Grip Fluorescent Highlighter, Yellow Ink", "shape": "dot"}, {"color": "blue", "id": "Polycom VoiceStation 100", "label": "Polycom VoiceStation 100", "shape": "dot"}, {"color": "red", "id": "Bretford CR8500 Series Meeting Room Furniture", "label": "Bretford CR8500 Series Meeting Room Furniture", "shape": "dot"}, {"color": "blue", "id": "Avery 484", "label": "Avery 484", "shape": "dot"}, {"color": "red", "id": "Eldon Simplefile\u00ae Box Office\u00ae", "label": "Eldon Simplefile\u00ae Box Office\u00ae", "shape": "dot"}, {"color": "blue", "id": "Xerox 1941", "label": "Xerox 1941", "shape": "dot"}, {"color": "red", "id": "Honeywell Enviracaire Portable HEPA Air Cleaner for 17\u0027 x 22\u0027 Room", "label": "Honeywell Enviracaire Portable HEPA Air Cleaner for 17\u0027 x 22\u0027 Room", "shape": "dot"}, {"color": "blue", "id": "Tennsco Lockers, Sand", "label": "Tennsco Lockers, Sand", "shape": "dot"}, {"color": "red", "id": "Xerox 221", "label": "Xerox 221", "shape": "dot"}, {"color": "red", "id": "US Robotics 56K V.92 Internal PCI Faxmodem", "label": "US Robotics 56K V.92 Internal PCI Faxmodem", "shape": "dot"}, {"color": "blue", "id": "Eldon\u00ae Image Series Desk Accessories, Burgundy", "label": "Eldon\u00ae Image Series Desk Accessories, Burgundy", "shape": "dot"}, {"color": "red", "id": "Pressboard Covers with Storage Hooks, 9 1/2\" x 11\", Light Blue", "label": "Pressboard Covers with Storage Hooks, 9 1/2\" x 11\", Light Blue", "shape": "dot"}, {"color": "red", "id": "Xerox 1968", "label": "Xerox 1968", "shape": "dot"}, {"color": "red", "id": "Belkin 5 Outlet SurgeMaster\u2122 Power Centers", "label": "Belkin 5 Outlet SurgeMaster\u2122 Power Centers", "shape": "dot"}, {"color": "blue", "id": "Xerox 1997", "label": "Xerox 1997", "shape": "dot"}, {"color": "red", "id": "I888 World Phone", "label": "I888 World Phone", "shape": "dot"}, {"color": "blue", "id": "Hon Valutask\u2122 Swivel Chairs", "label": "Hon Valutask\u2122 Swivel Chairs", "shape": "dot"}, {"color": "red", "id": "Hon 4070 Series Pagoda\u2122 Armless Upholstered Stacking Chairs", "label": "Hon 4070 Series Pagoda\u2122 Armless Upholstered Stacking Chairs", "shape": "dot"}, {"color": "blue", "id": "Boston KS Multi-Size Manual Pencil Sharpener", "label": "Boston KS Multi-Size Manual Pencil Sharpener", "shape": "dot"}, {"color": "red", "id": "Hunt BOSTON\u00ae Vista\u00ae Battery-Operated Pencil Sharpener, Black", "label": "Hunt BOSTON\u00ae Vista\u00ae Battery-Operated Pencil Sharpener, Black", "shape": "dot"}, {"color": "blue", "id": "Deflect-o EconoMat Nonstudded, No Bevel Mat", "label": "Deflect-o EconoMat Nonstudded, No Bevel Mat", "shape": "dot"}, {"color": "red", "id": "2180", "label": "2180", "shape": "dot"}, {"color": "blue", "id": "i1000", "label": "i1000", "shape": "dot"}, {"color": "red", "id": "Career Cubicle Clock, 8 1/4\", Black", "label": "Career Cubicle Clock, 8 1/4\", Black", "shape": "dot"}, {"color": "blue", "id": "Belkin ErgoBoard\u2122 Keyboard", "label": "Belkin ErgoBoard\u2122 Keyboard", "shape": "dot"}, {"color": "blue", "id": "Xerox 23", "label": "Xerox 23", "shape": "dot"}, {"color": "red", "id": "Belkin 8 Outlet SurgeMaster II Gold Surge Protector with Phone Protection", "label": "Belkin 8 Outlet SurgeMaster II Gold Surge Protector with Phone Protection", "shape": "dot"}, {"color": "blue", "id": "Avery 487", "label": "Avery 487", "shape": "dot"}, {"color": "red", "id": "Xerox 216", "label": "Xerox 216", "shape": "dot"}, {"color": "blue", "id": "Belkin Premiere Surge Master II 8-outlet surge protector", "label": "Belkin Premiere Surge Master II 8-outlet surge protector", "shape": "dot"}, {"color": "red", "id": "*Staples* Letter Opener", "label": "*Staples* Letter Opener", "shape": "dot"}, {"color": "blue", "id": "Accessory37", "label": "Accessory37", "shape": "dot"}, {"color": "red", "id": "Self-Adhesive Address Labels for Typewriters by Universal", "label": "Self-Adhesive Address Labels for Typewriters by Universal", "shape": "dot"}, {"color": "blue", "id": "Staples 6 Outlet Surge", "label": "Staples 6 Outlet Surge", "shape": "dot"}, {"color": "red", "id": "Bush Mission Pointe Library", "label": "Bush Mission Pointe Library", "shape": "dot"}, {"color": "blue", "id": "Xerox 1923", "label": "Xerox 1923", "shape": "dot"}, {"color": "red", "id": "Portfile\u00ae Personal File Boxes", "label": "Portfile\u00ae Personal File Boxes", "shape": "dot"}, {"color": "blue", "id": "Eldon\u00ae Gobal File Keepers", "label": "Eldon\u00ae Gobal File Keepers", "shape": "dot"}, {"color": "red", "id": "Hoover Commercial Soft Guard Upright Vacuum And Disposable Filtration Bags", "label": "Hoover Commercial Soft Guard Upright Vacuum And Disposable Filtration Bags", "shape": "dot"}, {"color": "blue", "id": "Avery 510", "label": "Avery 510", "shape": "dot"}, {"color": "red", "id": "Ibico Presentation Index for Binding Systems", "label": "Ibico Presentation Index for Binding Systems", "shape": "dot"}, {"color": "blue", "id": "Eldon\u00ae 300 Class\u2122 Desk Accessories, Black", "label": "Eldon\u00ae 300 Class\u2122 Desk Accessories, Black", "shape": "dot"}, {"color": "red", "id": "Gyration Ultra Professional Cordless Optical Suite", "label": "Gyration Ultra Professional Cordless Optical Suite", "shape": "dot"}, {"color": "red", "id": "Newell 312", "label": "Newell 312", "shape": "dot"}, {"color": "red", "id": "Newell 309", "label": "Newell 309", "shape": "dot"}, {"color": "red", "id": "3M Office Air Cleaner", "label": "3M Office Air Cleaner", "shape": "dot"}, {"color": "blue", "id": "iDEN i550", "label": "iDEN i550", "shape": "dot"}, {"color": "red", "id": "Multimedia Mailers", "label": "Multimedia Mailers", "shape": "dot"}, {"color": "blue", "id": "V2397", "label": "V2397", "shape": "dot"}, {"color": "red", "id": "Aluminum Document Frame", "label": "Aluminum Document Frame", "shape": "dot"}, {"color": "blue", "id": "Novimex Fabric Task Chair", "label": "Novimex Fabric Task Chair", "shape": "dot"}, {"color": "red", "id": "U.S. Robotics 56K Internet Call Modem", "label": "U.S. Robotics 56K Internet Call Modem", "shape": "dot"}, {"color": "blue", "id": "Tennsco Lockers, Gray", "label": "Tennsco Lockers, Gray", "shape": "dot"}, {"color": "red", "id": "Xerox 1930", "label": "Xerox 1930", "shape": "dot"}, {"color": "red", "id": "T60", "label": "T60", "shape": "dot"}, {"color": "red", "id": "Micro Innovations Micro 3000 Keyboard, Black", "label": "Micro Innovations Micro 3000 Keyboard, Black", "shape": "dot"}, {"color": "blue", "id": "*Staples* Highlighting Markers", "label": "*Staples* Highlighting Markers", "shape": "dot"}, {"color": "red", "id": "Panasonic KP-350BK Electric Pencil Sharpener with Auto Stop", "label": "Panasonic KP-350BK Electric Pencil Sharpener with Auto Stop", "shape": "dot"}, {"color": "blue", "id": "Premium Transparent Presentation Covers by GBC", "label": "Premium Transparent Presentation Covers by GBC", "shape": "dot"}, {"color": "red", "id": "Xerox 1947", "label": "Xerox 1947", "shape": "dot"}, {"color": "blue", "id": "Sanford Uni-Blazer\u2122 View Highlighters, Chisel Tip, Yellow", "label": "Sanford Uni-Blazer\u2122 View Highlighters, Chisel Tip, Yellow", "shape": "dot"}, {"color": "red", "id": "Hon 2090 \u201cPillow Soft\u201d Series Mid Back Swivel/Tilt Chairs", "label": "Hon 2090 \u201cPillow Soft\u201d Series Mid Back Swivel/Tilt Chairs", "shape": "dot"}, {"color": "blue", "id": "Micro Innovations Micro Digital Wireless Keyboard and Mouse, Gray", "label": "Micro Innovations Micro Digital Wireless Keyboard and Mouse, Gray", "shape": "dot"}, {"color": "red", "id": "Imation Neon Mac Format Diskettes, 10/Pack", "label": "Imation Neon Mac Format Diskettes, 10/Pack", "shape": "dot"}, {"color": "blue", "id": "Xerox 214", "label": "Xerox 214", "shape": "dot"}, {"color": "red", "id": "Hewlett-Packard Deskjet 940 REFURBISHED Color Inkjet Printer", "label": "Hewlett-Packard Deskjet 940 REFURBISHED Color Inkjet Printer", "shape": "dot"}, {"color": "blue", "id": "Snap-A-Way\u00ae Black Print Carbonless Ruled Speed Letter, Triplicate", "label": "Snap-A-Way\u00ae Black Print Carbonless Ruled Speed Letter, Triplicate", "shape": "dot"}, {"color": "blue", "id": "Xerox 1996", "label": "Xerox 1996", "shape": "dot"}, {"color": "blue", "id": "2160i", "label": "2160i", "shape": "dot"}, {"color": "red", "id": "Wilson Jones Impact Binders", "label": "Wilson Jones Impact Binders", "shape": "dot"}, {"color": "red", "id": "Avery 501", "label": "Avery 501", "shape": "dot"}, {"color": "blue", "id": "Accessory21", "label": "Accessory21", "shape": "dot"}, {"color": "red", "id": "StarTAC 6500", "label": "StarTAC 6500", "shape": "dot"}, {"color": "blue", "id": "Brother DCP1000 Digital 3 in 1 Multifunction Machine", "label": "Brother DCP1000 Digital 3 in 1 Multifunction Machine", "shape": "dot"}, {"color": "blue", "id": "Telephone Message Books with Fax/Mobile Section, 5 1/2\" x 3 3/16\"", "label": "Telephone Message Books with Fax/Mobile Section, 5 1/2\" x 3 3/16\"", "shape": "dot"}, {"color": "red", "id": "SAFCO Arco Folding Chair", "label": "SAFCO Arco Folding Chair", "shape": "dot"}, {"color": "blue", "id": "GE 4 Foot Flourescent Tube, 40 Watt", "label": "GE 4 Foot Flourescent Tube, 40 Watt", "shape": "dot"}, {"color": "red", "id": "Holmes Replacement Filter for HEPA Air Cleaner, Medium Room", "label": "Holmes Replacement Filter for HEPA Air Cleaner, Medium Room", "shape": "dot"}, {"color": "blue", "id": "T193", "label": "T193", "shape": "dot"}, {"color": "red", "id": "Adesso Programmable 142-Key Keyboard", "label": "Adesso Programmable 142-Key Keyboard", "shape": "dot"}, {"color": "red", "id": "Binder Clips by OIC", "label": "Binder Clips by OIC", "shape": "dot"}, {"color": "blue", "id": "Wilson Jones 1\" Hanging DublLock\u00ae Ring Binders", "label": "Wilson Jones 1\" Hanging DublLock\u00ae Ring Binders", "shape": "dot"}, {"color": "red", "id": "Important Message Pads, 50 4-1/4 x 5-1/2 Forms per Pad", "label": "Important Message Pads, 50 4-1/4 x 5-1/2 Forms per Pad", "shape": "dot"}, {"color": "blue", "id": "Ibico Ibimaster 300 Manual Binding System", "label": "Ibico Ibimaster 300 Manual Binding System", "shape": "dot"}, {"color": "red", "id": "Storex DuraTech Recycled Plastic Frosted Binders", "label": "Storex DuraTech Recycled Plastic Frosted Binders", "shape": "dot"}, {"color": "blue", "id": "Blue String-Tie \u0026 Button Interoffice Envelopes, 10 x 13", "label": "Blue String-Tie \u0026 Button Interoffice Envelopes, 10 x 13", "shape": "dot"}, {"color": "red", "id": "Fellowes Internet Keyboard, Platinum", "label": "Fellowes Internet Keyboard, Platinum", "shape": "dot"}, {"color": "blue", "id": "Speediset Carbonless Redi-Letter\u00ae 7\" x 8 1/2\"", "label": "Speediset Carbonless Redi-Letter\u00ae 7\" x 8 1/2\"", "shape": "dot"}, {"color": "blue", "id": "Filing/Storage Totes and Swivel Casters", "label": "Filing/Storage Totes and Swivel Casters", "shape": "dot"}, {"color": "red", "id": "Canon MP41DH Printing Calculator", "label": "Canon MP41DH Printing Calculator", "shape": "dot"}, {"color": "blue", "id": "2160", "label": "2160", "shape": "dot"}, {"color": "red", "id": "Tripp Lite Isotel 8 Ultra 8 Outlet Metal Surge", "label": "Tripp Lite Isotel 8 Ultra 8 Outlet Metal Surge", "shape": "dot"}, {"color": "blue", "id": "Eldon Pizzaz\u2122 Desk Accessories", "label": "Eldon Pizzaz\u2122 Desk Accessories", "shape": "dot"}, {"color": "red", "id": "Avery Poly Binder Pockets", "label": "Avery Poly Binder Pockets", "shape": "dot"}, {"color": "blue", "id": "M3682", "label": "M3682", "shape": "dot"}, {"color": "red", "id": "688", "label": "688", "shape": "dot"}, {"color": "blue", "id": "Xerox 4200 Series MultiUse Premium Copy Paper (20Lb. and 84 Bright)", "label": "Xerox 4200 Series MultiUse Premium Copy Paper (20Lb. and 84 Bright)", "shape": "dot"}, {"color": "red", "id": "Staples SlimLine Pencil Sharpener", "label": "Staples SlimLine Pencil Sharpener", "shape": "dot"}, {"color": "blue", "id": "Tenex Contemporary Contur Chairmats for Low and Medium Pile Carpet, Computer, 39\" x 49\"", "label": "Tenex Contemporary Contur Chairmats for Low and Medium Pile Carpet, Computer, 39\" x 49\"", "shape": "dot"}, {"color": "red", "id": "Global Commerce\u2122 Series High-Back Swivel/Tilt Chairs", "label": "Global Commerce\u2122 Series High-Back Swivel/Tilt Chairs", "shape": "dot"}, {"color": "blue", "id": "Belkin 6 Outlet Metallic Surge Strip", "label": "Belkin 6 Outlet Metallic Surge Strip", "shape": "dot"}, {"color": "red", "id": "Belkin F9M820V08 8 Outlet Surge", "label": "Belkin F9M820V08 8 Outlet Surge", "shape": "dot"}, {"color": "blue", "id": "O\u0027Sullivan 2-Shelf Heavy-Duty Bookcases", "label": "O\u0027Sullivan 2-Shelf Heavy-Duty Bookcases", "shape": "dot"}, {"color": "red", "id": "80 Minute CD-R Spindle, 100/Pack - Staples", "label": "80 Minute CD-R Spindle, 100/Pack - Staples", "shape": "dot"}, {"color": "blue", "id": "Avery Hi-Liter Pen Style Six-Color Fluorescent Set", "label": "Avery Hi-Liter Pen Style Six-Color Fluorescent Set", "shape": "dot"}, {"color": "red", "id": "Cardinal Poly Pocket Divider Pockets for Ring Binders", "label": "Cardinal Poly Pocket Divider Pockets for Ring Binders", "shape": "dot"}, {"color": "blue", "id": "Recycled Eldon Regeneration Jumbo File", "label": "Recycled Eldon Regeneration Jumbo File", "shape": "dot"}, {"color": "red", "id": "Global Troy\u2122 Executive Leather Low-Back Tilter", "label": "Global Troy\u2122 Executive Leather Low-Back Tilter", "shape": "dot"}, {"color": "blue", "id": "Global High-Back Leather Tilter, Burgundy", "label": "Global High-Back Leather Tilter, Burgundy", "shape": "dot"}, {"color": "blue", "id": "Document Clip Frames", "label": "Document Clip Frames", "shape": "dot"}, {"color": "red", "id": "LX 677", "label": "LX 677", "shape": "dot"}, {"color": "blue", "id": "Riverside Palais Royal Lawyers Bookcase, Royale Cherry Finish", "label": "Riverside Palais Royal Lawyers Bookcase, Royale Cherry Finish", "shape": "dot"}, {"color": "red", "id": "Wilson Jones Hanging View Binder, White, 1\"", "label": "Wilson Jones Hanging View Binder, White, 1\"", "shape": "dot"}, {"color": "blue", "id": "Riverleaf Stik-Withit\u00ae Designer Note Cubes\u00ae", "label": "Riverleaf Stik-Withit\u00ae Designer Note Cubes\u00ae", "shape": "dot"}, {"color": "red", "id": "Newell 323", "label": "Newell 323", "shape": "dot"}, {"color": "blue", "id": "Imation 3.5 IBM Formatted Diskettes, 10/Box", "label": "Imation 3.5 IBM Formatted Diskettes, 10/Box", "shape": "dot"}, {"color": "blue", "id": "Newell 342", "label": "Newell 342", "shape": "dot"}, {"color": "red", "id": "M70", "label": "M70", "shape": "dot"}, {"color": "red", "id": "Tennsco Commercial Shelving", "label": "Tennsco Commercial Shelving", "shape": "dot"}, {"color": "blue", "id": "Global Leather Highback Executive Chair with Pneumatic Height Adjustment, Black", "label": "Global Leather Highback Executive Chair with Pneumatic Height Adjustment, Black", "shape": "dot"}, {"color": "red", "id": "Avery 491", "label": "Avery 491", "shape": "dot"}, {"color": "red", "id": "Bevis 36 x 72 Conference Tables", "label": "Bevis 36 x 72 Conference Tables", "shape": "dot"}, {"color": "blue", "id": "Xerox 1893", "label": "Xerox 1893", "shape": "dot"}, {"color": "red", "id": "Hewlett-Packard cp1700 [D, PS] Series Color Inkjet Printers", "label": "Hewlett-Packard cp1700 [D, PS] Series Color Inkjet Printers", "shape": "dot"}, {"color": "red", "id": "Newell 337", "label": "Newell 337", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "Bevis Round Conference Table Top \u0026 Single Column Base", "title": "Lift: 401.00", "to": "Round Specialty Laser Printer Labels", "value": 401.0}, {"from": "Nu-Dell Executive Frame", "title": "Lift: 401.00", "to": "Okidata ML184 Turbo Dot Matrix Printers", "value": 401.0}, {"from": "Angle-D Binders with Locking Rings, Label Holders", "title": "Lift: 401.00", "to": "SAFCO Mobile Desk Side File, Wire Frame", "value": 401.0}, {"from": "T61", "title": "Lift: 401.00", "to": "Acco Clips to Go\u2122 Binder Clips, 24 Clips in Two Sizes", "value": 401.0}, {"from": "Avery 48", "title": "Lift: 401.00", "to": "Wilson Jones Standard D-Ring Binders", "value": 401.0}, {"from": "Xerox 1928", "title": "Lift: 401.00", "to": "6190", "value": 401.0}, {"from": "5170", "title": "Lift: 267.33", "to": "Barrel Sharpener", "value": 267.3333333333333}, {"from": "Xerox 1948", "title": "Lift: 267.33", "to": "Acco D-Ring Binder w/DublLock\u00ae", "value": 267.3333333333333}, {"from": "Microsoft Natural Multimedia Keyboard", "title": "Lift: 267.33", "to": "T61", "value": 267.3333333333333}, {"from": "Recycled Steel Personal File for Standard File Folders", "title": "Lift: 267.33", "to": "Eldon Advantage\u00ae Foldable Chair Mats for Low Pile Carpets", "value": 267.3333333333333}, {"from": "MicroTAC 650", "title": "Lift: 267.33", "to": "Xerox 1953", "value": 267.3333333333333}, {"from": "6162", "title": "Lift: 267.33", "to": "Security-Tint Envelopes", "value": 267.3333333333333}, {"from": "Situations Contoured Folding Chairs, 4/Set", "title": "Lift: 267.33", "to": "Avery Hi-Liter Comfort Grip Fluorescent Highlighter, Yellow Ink", "value": 267.3333333333333}, {"from": "Polycom VoiceStation 100", "title": "Lift: 267.33", "to": "Bretford CR8500 Series Meeting Room Furniture", "value": 267.3333333333333}, {"from": "Avery 484", "title": "Lift: 267.33", "to": "Eldon Simplefile\u00ae Box Office\u00ae", "value": 267.3333333333333}, {"from": "Microsoft Natural Multimedia Keyboard", "title": "Lift: 267.33", "to": "Acco Clips to Go\u2122 Binder Clips, 24 Clips in Two Sizes", "value": 267.3333333333333}, {"from": "Xerox 1941", "title": "Lift: 267.33", "to": "Honeywell Enviracaire Portable HEPA Air Cleaner for 17\u0027 x 22\u0027 Room", "value": 267.3333333333333}, {"from": "Tennsco Lockers, Sand", "title": "Lift: 267.33", "to": "Xerox 221", "value": 267.3333333333333}, {"from": "Xerox 1941", "title": "Lift: 200.50", "to": "US Robotics 56K V.92 Internal PCI Faxmodem", "value": 200.5}, {"from": "Eldon\u00ae Image Series Desk Accessories, Burgundy", "title": "Lift: 200.50", "to": "Pressboard Covers with Storage Hooks, 9 1/2\" x 11\", Light Blue", "value": 200.5}, {"from": "Acco Clips to Go\u2122 Binder Clips, 24 Clips in Two Sizes", "title": "Lift: 200.50", "to": "Xerox 1968", "value": 200.5}, {"from": "Acco Clips to Go\u2122 Binder Clips, 24 Clips in Two Sizes", "title": "Lift: 200.50", "to": "Belkin 5 Outlet SurgeMaster\u2122 Power Centers", "value": 200.5}, {"from": "Xerox 1997", "title": "Lift: 200.50", "to": "I888 World Phone", "value": 200.5}, {"from": "Hon Valutask\u2122 Swivel Chairs", "title": "Lift: 200.50", "to": "Hon 4070 Series Pagoda\u2122 Armless Upholstered Stacking Chairs", "value": 200.5}, {"from": "T61", "title": "Lift: 200.50", "to": "Belkin 5 Outlet SurgeMaster\u2122 Power Centers", "value": 200.5}, {"from": "Boston KS Multi-Size Manual Pencil Sharpener", "title": "Lift: 200.50", "to": "Hunt BOSTON\u00ae Vista\u00ae Battery-Operated Pencil Sharpener, Black", "value": 200.5}, {"from": "Deflect-o EconoMat Nonstudded, No Bevel Mat", "title": "Lift: 200.50", "to": "2180", "value": 200.5}, {"from": "T61", "title": "Lift: 200.50", "to": "Xerox 1968", "value": 200.5}, {"from": "i1000", "title": "Lift: 200.50", "to": "Career Cubicle Clock, 8 1/4\", Black", "value": 200.5}, {"from": "Belkin ErgoBoard\u2122 Keyboard", "title": "Lift: 200.50", "to": "MicroTAC 650", "value": 200.5}, {"from": "Xerox 23", "title": "Lift: 200.50", "to": "Belkin 8 Outlet SurgeMaster II Gold Surge Protector with Phone Protection", "value": 200.5}, {"from": "Avery 487", "title": "Lift: 178.22", "to": "Xerox 216", "value": 178.22222222222223}, {"from": "Belkin Premiere Surge Master II 8-outlet surge protector", "title": "Lift: 178.22", "to": "*Staples* Letter Opener", "value": 178.22222222222223}, {"from": "Accessory37", "title": "Lift: 178.22", "to": "Self-Adhesive Address Labels for Typewriters by Universal", "value": 178.22222222222223}, {"from": "Staples 6 Outlet Surge", "title": "Lift: 178.22", "to": "Bush Mission Pointe Library", "value": 178.22222222222223}, {"from": "Xerox 1923", "title": "Lift: 178.22", "to": "Portfile\u00ae Personal File Boxes", "value": 178.22222222222223}, {"from": "Eldon\u00ae Gobal File Keepers", "title": "Lift: 178.22", "to": "Hoover Commercial Soft Guard Upright Vacuum And Disposable Filtration Bags", "value": 178.22222222222223}, {"from": "Avery 510", "title": "Lift: 160.40", "to": "Ibico Presentation Index for Binding Systems", "value": 160.4}, {"from": "Eldon\u00ae 300 Class\u2122 Desk Accessories, Black", "title": "Lift: 160.40", "to": "Gyration Ultra Professional Cordless Optical Suite", "value": 160.4}, {"from": "Bretford CR8500 Series Meeting Room Furniture", "title": "Lift: 160.40", "to": "Newell 312", "value": 160.4}, {"from": "6162", "title": "Lift: 160.40", "to": "Newell 309", "value": 160.4}, {"from": "Acco Clips to Go\u2122 Binder Clips, 24 Clips in Two Sizes", "title": "Lift: 160.40", "to": "3M Office Air Cleaner", "value": 160.4}, {"from": "T61", "title": "Lift: 160.40", "to": "3M Office Air Cleaner", "value": 160.4}, {"from": "iDEN i550", "title": "Lift: 160.40", "to": "Multimedia Mailers", "value": 160.4}, {"from": "V2397", "title": "Lift: 160.40", "to": "Aluminum Document Frame", "value": 160.4}, {"from": "Novimex Fabric Task Chair", "title": "Lift: 133.67", "to": "U.S. Robotics 56K Internet Call Modem", "value": 133.66666666666666}, {"from": "Tennsco Lockers, Gray", "title": "Lift: 133.67", "to": "Xerox 1930", "value": 133.66666666666666}, {"from": "Staples 6 Outlet Surge", "title": "Lift: 133.67", "to": "T60", "value": 133.66666666666666}, {"from": "Bush Mission Pointe Library", "title": "Lift: 133.67", "to": "Micro Innovations Micro 3000 Keyboard, Black", "value": 133.66666666666666}, {"from": "*Staples* Highlighting Markers", "title": "Lift: 133.67", "to": "Panasonic KP-350BK Electric Pencil Sharpener with Auto Stop", "value": 133.66666666666666}, {"from": "Premium Transparent Presentation Covers by GBC", "title": "Lift: 133.67", "to": "Xerox 1947", "value": 133.66666666666666}, {"from": "T60", "title": "Lift: 133.67", "to": "Bush Mission Pointe Library", "value": 133.66666666666666}, {"from": "Sanford Uni-Blazer\u2122 View Highlighters, Chisel Tip, Yellow", "title": "Lift: 133.67", "to": "Hon 2090 \u201cPillow Soft\u201d Series Mid Back Swivel/Tilt Chairs", "value": 133.66666666666666}, {"from": "US Robotics 56K V.92 Internal PCI Faxmodem", "title": "Lift: 133.67", "to": "Honeywell Enviracaire Portable HEPA Air Cleaner for 17\u0027 x 22\u0027 Room", "value": 133.66666666666666}, {"from": "Micro Innovations Micro Digital Wireless Keyboard and Mouse, Gray", "title": "Lift: 133.67", "to": "Situations Contoured Folding Chairs, 4/Set", "value": 133.66666666666666}, {"from": "Deflect-o EconoMat Nonstudded, No Bevel Mat", "title": "Lift: 133.67", "to": "Imation Neon Mac Format Diskettes, 10/Pack", "value": 133.66666666666666}, {"from": "Xerox 214", "title": "Lift: 133.67", "to": "Hewlett-Packard Deskjet 940 REFURBISHED Color Inkjet Printer", "value": 133.66666666666666}, {"from": "Snap-A-Way\u00ae Black Print Carbonless Ruled Speed Letter, Triplicate", "title": "Lift: 133.67", "to": "Eldon Advantage\u00ae Foldable Chair Mats for Low Pile Carpets", "value": 133.66666666666666}, {"from": "Micro Innovations Micro 3000 Keyboard, Black", "title": "Lift: 133.67", "to": "Staples 6 Outlet Surge", "value": 133.66666666666666}, {"from": "Microsoft Natural Multimedia Keyboard", "title": "Lift: 133.67", "to": "Xerox 1968", "value": 133.66666666666666}, {"from": "Xerox 1996", "title": "Lift: 133.67", "to": "Boston KS Multi-Size Manual Pencil Sharpener", "value": 133.66666666666666}, {"from": "Belkin ErgoBoard\u2122 Keyboard", "title": "Lift: 133.67", "to": "Xerox 1953", "value": 133.66666666666666}, {"from": "2160i", "title": "Lift: 133.67", "to": "iDEN i550", "value": 133.66666666666666}, {"from": "2180", "title": "Lift: 133.67", "to": "Wilson Jones Impact Binders", "value": 133.66666666666666}, {"from": "Avery 48", "title": "Lift: 133.67", "to": "Avery 501", "value": 133.66666666666666}, {"from": "Wilson Jones Standard D-Ring Binders", "title": "Lift: 133.67", "to": "Avery 501", "value": 133.66666666666666}, {"from": "Microsoft Natural Multimedia Keyboard", "title": "Lift: 133.67", "to": "Belkin 5 Outlet SurgeMaster\u2122 Power Centers", "value": 133.66666666666666}, {"from": "Accessory21", "title": "Lift: 106.93", "to": "StarTAC 6500", "value": 106.93333333333332}, {"from": "Brother DCP1000 Digital 3 in 1 Multifunction Machine", "title": "Lift: 106.93", "to": "Multimedia Mailers", "value": 106.93333333333332}, {"from": "Telephone Message Books with Fax/Mobile Section, 5 1/2\" x 3 3/16\"", "title": "Lift: 106.93", "to": "SAFCO Arco Folding Chair", "value": 106.93333333333332}, {"from": "GE 4 Foot Flourescent Tube, 40 Watt", "title": "Lift: 106.93", "to": "Holmes Replacement Filter for HEPA Air Cleaner, Medium Room", "value": 106.93333333333332}, {"from": "T193", "title": "Lift: 106.93", "to": "Adesso Programmable 142-Key Keyboard", "value": 106.93333333333332}, {"from": "Polycom VoiceStation 100", "title": "Lift: 106.93", "to": "Newell 312", "value": 106.93333333333332}, {"from": "Novimex Fabric Task Chair", "title": "Lift: 106.93", "to": "Binder Clips by OIC", "value": 106.93333333333332}, {"from": "Security-Tint Envelopes", "title": "Lift: 106.93", "to": "Newell 309", "value": 106.93333333333332}, {"from": "Wilson Jones 1\" Hanging DublLock\u00ae Ring Binders", "title": "Lift: 106.93", "to": "Important Message Pads, 50 4-1/4 x 5-1/2 Forms per Pad", "value": 106.93333333333332}, {"from": "Microsoft Natural Multimedia Keyboard", "title": "Lift: 106.93", "to": "3M Office Air Cleaner", "value": 106.93333333333332}, {"from": "Ibico Ibimaster 300 Manual Binding System", "title": "Lift: 106.93", "to": "Storex DuraTech Recycled Plastic Frosted Binders", "value": 106.93333333333332}, {"from": "Blue String-Tie \u0026 Button Interoffice Envelopes, 10 x 13", "title": "Lift: 106.93", "to": "Fellowes Internet Keyboard, Platinum", "value": 106.93333333333332}, {"from": "Speediset Carbonless Redi-Letter\u00ae 7\" x 8 1/2\"", "title": "Lift: 106.93", "to": "Belkin Premiere Surge Master II 8-outlet surge protector", "value": 106.93333333333332}, {"from": "*Staples* Letter Opener", "title": "Lift: 106.93", "to": "Speediset Carbonless Redi-Letter\u00ae 7\" x 8 1/2\"", "value": 106.93333333333332}, {"from": "Filing/Storage Totes and Swivel Casters", "title": "Lift: 106.93", "to": "Canon MP41DH Printing Calculator", "value": 106.93333333333332}, {"from": "2160", "title": "Lift: 106.93", "to": "Newell 309", "value": 106.93333333333332}, {"from": "US Robotics 56K V.92 Internal PCI Faxmodem", "title": "Lift: 100.25", "to": "Tripp Lite Isotel 8 Ultra 8 Outlet Metal Surge", "value": 100.25}, {"from": "Eldon Pizzaz\u2122 Desk Accessories", "title": "Lift: 100.25", "to": "Avery Poly Binder Pockets", "value": 100.25}, {"from": "M3682", "title": "Lift: 100.25", "to": "688", "value": 100.25}, {"from": "Xerox 4200 Series MultiUse Premium Copy Paper (20Lb. and 84 Bright)", "title": "Lift: 100.25", "to": "Hewlett-Packard Deskjet 940 REFURBISHED Color Inkjet Printer", "value": 100.25}, {"from": "M3682", "title": "Lift: 100.25", "to": "Staples SlimLine Pencil Sharpener", "value": 100.25}, {"from": "Xerox 1968", "title": "Lift: 100.25", "to": "Belkin 5 Outlet SurgeMaster\u2122 Power Centers", "value": 100.25}, {"from": "T60", "title": "Lift: 100.25", "to": "Micro Innovations Micro 3000 Keyboard, Black", "value": 100.25}, {"from": "Tenex Contemporary Contur Chairmats for Low and Medium Pile Carpet, Computer, 39\" x 49\"", "title": "Lift: 100.25", "to": "Global Commerce\u2122 Series High-Back Swivel/Tilt Chairs", "value": 100.25}, {"from": "Belkin 6 Outlet Metallic Surge Strip", "title": "Lift: 100.25", "to": "Belkin F9M820V08 8 Outlet Surge", "value": 100.25}, {"from": "O\u0027Sullivan 2-Shelf Heavy-Duty Bookcases", "title": "Lift: 89.11", "to": "80 Minute CD-R Spindle, 100/Pack - Staples", "value": 89.11111111111111}, {"from": "Avery Hi-Liter Pen Style Six-Color Fluorescent Set", "title": "Lift: 89.11", "to": "Avery 501", "value": 89.11111111111111}, {"from": "Holmes Replacement Filter for HEPA Air Cleaner, Medium Room", "title": "Lift: 89.11", "to": "Cardinal Poly Pocket Divider Pockets for Ring Binders", "value": 89.11111111111111}, {"from": "Recycled Eldon Regeneration Jumbo File", "title": "Lift: 89.11", "to": "Global Troy\u2122 Executive Leather Low-Back Tilter", "value": 89.11111111111111}, {"from": "Recycled Steel Personal File for Standard File Folders", "title": "Lift: 89.11", "to": "Snap-A-Way\u00ae Black Print Carbonless Ruled Speed Letter, Triplicate", "value": 89.11111111111111}, {"from": "Global High-Back Leather Tilter, Burgundy", "title": "Lift: 89.11", "to": "Holmes Replacement Filter for HEPA Air Cleaner, Medium Room", "value": 89.11111111111111}, {"from": "Micro Innovations Micro Digital Wireless Keyboard and Mouse, Gray", "title": "Lift: 89.11", "to": "Avery Hi-Liter Comfort Grip Fluorescent Highlighter, Yellow Ink", "value": 89.11111111111111}, {"from": "Xerox 1968", "title": "Lift: 80.20", "to": "3M Office Air Cleaner", "value": 80.2}, {"from": "Belkin 5 Outlet SurgeMaster\u2122 Power Centers", "title": "Lift: 80.20", "to": "3M Office Air Cleaner", "value": 80.2}, {"from": "U.S. Robotics 56K Internet Call Modem", "title": "Lift: 80.20", "to": "Binder Clips by OIC", "value": 80.2}, {"from": "Document Clip Frames", "title": "Lift: 76.38", "to": "LX 677", "value": 76.3809523809524}, {"from": "Document Clip Frames", "title": "Lift: 76.38", "to": "Brother DCP1000 Digital 3 in 1 Multifunction Machine", "value": 76.3809523809524}, {"from": "Riverside Palais Royal Lawyers Bookcase, Royale Cherry Finish", "title": "Lift: 66.83", "to": "US Robotics 56K V.92 Internal PCI Faxmodem", "value": 66.83333333333333}, {"from": "2180", "title": "Lift: 66.83", "to": "Imation Neon Mac Format Diskettes, 10/Pack", "value": 66.83333333333333}, {"from": "Tenex Contemporary Contur Chairmats for Low and Medium Pile Carpet, Computer, 39\" x 49\"", "title": "Lift: 66.83", "to": "Wilson Jones Hanging View Binder, White, 1\"", "value": 66.83333333333333}, {"from": "Riverside Palais Royal Lawyers Bookcase, Royale Cherry Finish", "title": "Lift: 66.83", "to": "Tripp Lite Isotel 8 Ultra 8 Outlet Metal Surge", "value": 66.83333333333333}, {"from": "Riverleaf Stik-Withit\u00ae Designer Note Cubes\u00ae", "title": "Lift: 66.83", "to": "Newell 323", "value": 66.83333333333333}, {"from": "Imation 3.5 IBM Formatted Diskettes, 10/Box", "title": "Lift: 66.83", "to": "Tripp Lite Isotel 8 Ultra 8 Outlet Metal Surge", "value": 66.83333333333333}, {"from": "688", "title": "Lift: 66.83", "to": "Staples SlimLine Pencil Sharpener", "value": 66.83333333333333}, {"from": "Newell 342", "title": "Lift: 66.83", "to": "M70", "value": 66.83333333333333}, {"from": "Imation 3.5 IBM Formatted Diskettes, 10/Box", "title": "Lift: 66.83", "to": "US Robotics 56K V.92 Internal PCI Faxmodem", "value": 66.83333333333333}, {"from": "Belkin 5 Outlet SurgeMaster\u2122 Power Centers", "title": "Lift: 66.83", "to": "M70", "value": 66.83333333333333}, {"from": "Global Commerce\u2122 Series High-Back Swivel/Tilt Chairs", "title": "Lift: 66.83", "to": "Wilson Jones Hanging View Binder, White, 1\"", "value": 66.83333333333333}, {"from": "Global Troy\u2122 Executive Leather Low-Back Tilter", "title": "Lift: 53.47", "to": "Tennsco Commercial Shelving", "value": 53.46666666666666}, {"from": "Multimedia Mailers", "title": "Lift: 53.47", "to": "2160i", "value": 53.46666666666666}, {"from": "Global High-Back Leather Tilter, Burgundy", "title": "Lift: 53.47", "to": "GE 4 Foot Flourescent Tube, 40 Watt", "value": 53.46666666666666}, {"from": "Cardinal Poly Pocket Divider Pockets for Ring Binders", "title": "Lift: 53.47", "to": "GE 4 Foot Flourescent Tube, 40 Watt", "value": 53.46666666666666}, {"from": "Global Leather Highback Executive Chair with Pneumatic Height Adjustment, Black", "title": "Lift: 53.47", "to": "Avery 491", "value": 53.46666666666666}, {"from": "Eldon Pizzaz\u2122 Desk Accessories", "title": "Lift: 50.12", "to": "Bevis 36 x 72 Conference Tables", "value": 50.125}, {"from": "Avery Poly Binder Pockets", "title": "Lift: 50.12", "to": "Bevis 36 x 72 Conference Tables", "value": 50.125}, {"from": "Xerox 1893", "title": "Lift: 45.83", "to": "Hewlett-Packard cp1700 [D, PS] Series Color Inkjet Printers", "value": 45.828571428571436}, {"from": "Document Clip Frames", "title": "Lift: 45.83", "to": "Newell 337", "value": 45.828571428571436}, {"from": "Document Clip Frames", "title": "Lift: 45.83", "to": "Multimedia Mailers", "value": 45.828571428571436}, {"from": "Riverside Palais Royal Lawyers Bookcase, Royale Cherry Finish", "title": "Lift: 44.56", "to": "Imation 3.5 IBM Formatted Diskettes, 10/Box", "value": 44.55555555555556}, {"from": "Cardinal Poly Pocket Divider Pockets for Ring Binders", "title": "Lift: 44.56", "to": "Global High-Back Leather Tilter, Burgundy", "value": 44.55555555555556}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
